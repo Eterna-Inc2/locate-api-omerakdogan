@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
-
+ 
 // 4) MySQL pool
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
