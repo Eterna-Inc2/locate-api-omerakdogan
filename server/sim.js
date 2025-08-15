@@ -10,7 +10,7 @@ const deviceId = process.env.DEVICE_ID || 'truck-1';  // eğer cihaz adı .env d
 let lat = 37.0;
 let lng = 35.3213;
 
-function jitter(value, range = 0.001) {   // Cinsi enlemdir. 1 enlem = 111km 'dir. (range = 1 demek 111km demektir.)
+function jitter(value, range = 0.0001) {   // Cinsi enlemdir. 1 enlem = 111km 'dir. (range = 1 demek 111km demektir.)
   return value + (Math.random() - 0.01) * range;
 }
 
