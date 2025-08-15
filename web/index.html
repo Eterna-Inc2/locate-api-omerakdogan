@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Live Location (Leaflet)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <style>
+    html, body, #map { height: 100%; margin: 0; }
+    #followBtn{
+      position:absolute; z-index:9999; top:20px; right:10px;
+      padding:6px 10px; border:0; border-radius:8px;
+      background:#2b6cb0; color:#fff; cursor:pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+  </style>
+</head>
+<body>
+  <button id="followBtn">Takip: AÇIK</button>
+  <div id="map"></div>
+
+  <!-- Socket.IO client (backend'ten) -->
+  <script src="http://localhost:3001/socket.io/socket.io.js"></script>
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <script>
+    // Haritayı başlat
+    const map = L.map('map').setView([41.015137, 28.97953], 11);
+
+    // OpenStreetMap tile'ları
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const markers = new Map(); // deviceId -> Marker
+
+    // WS'e bağlan
+    const socket = io("http://localhost:3001", { transports: ["websocket"] });
+
+    // Takip modu + throttle
+    let follow = true;
+    let lastPanAt = 0;
+    const PAN_INTERVAL_MS = 700; // en fazla 0.7 sn'de bir pan
+
+    const btn = document.getElementById('followBtn');
+    btn.onclick = () => {
+      follow = !follow;
+      btn.textContent = `Takip: ${follow ? 'AÇIK' : 'KAPALI'}`;
+    };
+
+    function isFar(a, b) {
+      const dLat = Math.abs(a[0] - b[0]);
+      const dLng = Math.abs(a[1] - b[1]);
+      return dLat > 0.5 || dLng > 0.5; // ~50km+ sıçrama
+    }
+
+    // Gelen konumu işle
+    socket.on("location", (data) => {
+      const lat = Number(data.lat);
+      const lng = Number(data.lng);
+      const pos = [lat, lng];
+
+      if (!markers.has(data.deviceId)) {
+        const m = L.marker(pos, { title: data.deviceId }).addTo(map);
+        m.bindPopup(`<b>${data.deviceId}</b><br>${lat}, ${lng}`);
+        markers.set(data.deviceId, m);
+        map.setView(pos, 14); // ilk gelişte ışınla
+      } else {
+        const m = markers.get(data.deviceId);
+        m.setLatLng(pos);
+        m.setPopupContent(`<b>${data.deviceId}</b><br>${lat}, ${lng}`);
+      }
+
+      // Takip modu: sık akışta yumuşak pan, uzak sıçramada fly
+      if (follow) {
+        const now = Date.now();
+        if (now - lastPanAt > PAN_INTERVAL_MS) {
+          const c = map.getCenter();
+          const center = [c.lat, c.lng];
+          if (isFar(center, pos)) {
+            map.flyTo(pos, Math.max(map.getZoom(), 12));
+          } else {
+            map.panTo(pos);
+          }
+          lastPanAt = now;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
