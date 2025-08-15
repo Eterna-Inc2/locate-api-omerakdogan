@@ -5,12 +5,12 @@ const apiKey = process.env.API_KEY;
 const deviceId = process.env.DEVICE_ID || 'truck-1';  // eğer cihaz adı .env dosyasında tanımlı ise onu kullanır yoksa truck-1 'i kullanır.
 
 // Başlangıç konumu İSTANBUL // let lat = 41.05; // let lng = 28.97;
-// Başlangıç konumu DİYARBAKIR // let lat = 37.9144; // let lng = 40.2306;
-//Başlangıç konumu ADANA
-let lat = 37.0;
-let lng = 35.3213;
+// Başlangıç konumu DİYARBAKIR 
+let lat = 37.9144;
+let lng = 40.2306;
+// Başlangıç konumu ADANA // let lat = 37.0; // let lng = 35.3213;
 
-function jitter(value, range = 0.001) {   // Cinsi enlemdir. 1 enlem = 111km 'dir. (range = 1 demek 111km demektir.)
+function jitter(value, range = 0.00015) {   // Cinsi enlemdir. 1 enlem = 111km 'dir. (range = 1 demek 111km demektir.)
   return value + (Math.random() - 0.01) * range;
 }
 
