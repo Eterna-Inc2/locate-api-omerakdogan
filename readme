@@ -1,5 +1,5 @@
 
-NOT : PROJEYE DAİR TÜM DETAYLAR "locate-api PROJECT REPORT(ÖMER AKODĞAN)" ADLI PDF 'TE DETAYLICA RAPORLANMIŞTIR.
+NOT : PROJEYE DAİR TÜM DETAYLAR "SECOND PROJECT REPORT(ÖMER AKODĞAN)" ADLI PDF 'TE DETAYLICA RAPORLANMIŞTIR.
 
 ------------------------------------------------------------------------------------------------------------------------------
 
@@ -10,13 +10,13 @@ BACK-END ÇALIŞTIRMA SIRASI :
 Çalışma durumu: brew services list | grep mysql
 İyi çıktı: started görürsün.
 
-Ping: mysqladmin ping -uroot -p  (DataBase Şifresi İsteyecek : ****) "DataBase şifresi için iletişime geçiniz.!"
+Ping: mysqladmin ping -uroot -p  (DataBase Şifresi İsteyecek : mysql2121)
 İyi çıktı: mysqld is alive
 
 Port dinliyor mu (3306)? : lsof -i :3306
 İyi çıktı: mysqld veya MySQLWork… satırları görünür.
 
-Bağlanıp mini test: mysql -uroot -p -e "USE live_location; SELECT 1;" (DataBase Şifresi İsteyecek : ****) "DataBase şifresi için iletişime geçiniz.!"
+Bağlanıp mini test: mysql -uroot -p -e "USE live_location; SELECT 1;" (DataBase Şifresi İsteyecek : mysql2121)
 İyi çıktı: 1 döner, hata yok.
 
 -----------------------------------------------------------------
@@ -88,4 +88,7 @@ WHERE device_id = 'truck-1';
 
 ------------------------------------------------------------------------------------------------------------------------------
 
+Ngrok web-sitesi ve authtoken için wwb sites linki:
+https://dashboard.ngrok.com/get-started/setup/macos
 
+------------------------------------------------------------------------------------------------------------------------------
