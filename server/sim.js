@@ -6,7 +6,7 @@ const deviceId = process.env.DEVICE_ID || 'truck-1';  // eğer cihaz adı .env d
 
 // Başlangıç konumu İSTANBUL
 let lat = 41.05; 
-let lng = 28.97;
+let lng = 28.97; 
 // Başlangıç konumu DİYARBAKIR  let lat = 37.9144; let lng = 40.2306;
 // Başlangıç konumu ADANA // let lat = 37.0; // let lng = 35.3213;
 
